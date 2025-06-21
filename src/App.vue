@@ -1,11 +1,19 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref } from 'vue';
 
-const message = ref('hello world');
-const newTask = ref("");
+import TaskForm from './components/TaskForm.vue';
+import type { Task } from './types';
 
-function formSubmitted(){
-  console.log(newTask.value);
+const message = ref('Tasks App');
+const tasks = ref<Task[]>([]);
+
+function addTask(newTask: string){
+  console.log(newTask);
+  tasks.value.push({
+    id: crypto.randomUUID(),
+    title: newTask,
+    done: false,
+  })
 }
 
 </script>
@@ -13,15 +21,8 @@ function formSubmitted(){
 <template>
   <main>
     <h1>{{ message }}</h1>
-    <form @submit.prevent="formSubmitted">
-      <label>
-        New Task
-         <input name="newTask" v-model="newTask" >
-      </label>
-      <div class="button-container">
-        <button>Add</button>
-      </div>
-    </form>
+    <task-form @add-task="addTask"/>
+    <h3>There are {{ tasks.length }} Tasks</h3>
   </main>
 </template>
 
@@ -31,8 +32,4 @@ main{
   margin: 1rem auto;
 }
 
-.button-container{
-  display: flex;
-  justify-content: end;
-}
 </style>
